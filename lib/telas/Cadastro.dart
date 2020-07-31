@@ -80,7 +80,7 @@ class _CadastroState extends State<Cadastro> {
                       "Cadastar",
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
-                    color: Colors.cyan,
+                    
                     padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                     onPressed: () {}),
               ),

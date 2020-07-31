@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uber/telas/Login.dart';
+import 'package:uber/telas/RouteGenerator.dart';
+
 
 final ThemeData temPadrao = ThemeData(
   primaryColor: Color(0xff37474f),
@@ -12,6 +14,11 @@ void main() {
     title: "Uber",
     home: Login(),
     theme: temPadrao,
+    initialRoute: "/",
+    onGenerateRoute: RouteGenerator.gerarRotas,
     debugShowCheckedModeBanner: false,
-  ));
+    
+  ),
+  
+  );
 }

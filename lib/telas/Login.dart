@@ -75,12 +75,7 @@ class _LoginState extends State<Login> {
                     child: Text("Não tem conta? cadastre-se!",
                         style: TextStyle(color: Colors.white)),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                         MaterialPageRoute(
-                           builder: (_) => Cadastro()
-                           )
-                        );
+                      Navigator.pushNamed(context, "/cadastro");
                     },
                   ),
                 ),
