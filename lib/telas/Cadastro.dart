@@ -16,34 +16,31 @@ class _CadastroState extends State<Cadastro> {
   String _mensagemErro = "";
 
   _validarCampos() {
-    print("Validar campos");
+   
     //Recuperando Dados dos campos
     String nome = _controllerNome.text;
     String email = _controllerEmail.text;
     String senha = _controllerSenha.text;
-    print("Validar campos1");
+    
 
     if (nome.isNotEmpty) {
       print("Chegou nome");
       _mensagemErro = "";
       if (email.isNotEmpty && email.contains("@")) {
-        print("Chegou email");
+        
         _mensagemErro = "";
         if (senha.isNotEmpty && senha.length >= 6) {
           print("Chegou senha");
           _mensagemErro = "";
           Usuario usuario = Usuario();
-          print("senha");
+          
 
           usuario.nome = nome;
           usuario.email = email;
           usuario.senha = senha;
           usuario.tipoUsuario = usuario.verificaTipoUsuario(_tipoUsuario);
 
-          print(usuario.email);
-          print(usuario.nome);
-          print(usuario.tipoUsuario);
-
+         
           _cadastrarUsuario(usuario);
         } else {
           _mensagemErro = "Preencha a senha! digite mais de 6 caracteres";
@@ -85,6 +82,8 @@ class _CadastroState extends State<Cadastro> {
               context, "/painel-passageiro", (_) => false);
           break;
       }
+    }).catchError((error) {
+      _mensagemErro = "Erro ao cadastrar usuario, verifique os campos e tente novamente";
     });
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uber/telas/PainelMorotista.dart';
 import 'package:uber/telas/PainelPassageiro.dart';
 import 'Cadastro.dart';
-import 'Home.dart';
+
 import 'Login.dart';
 
 class RouteGenerator {
@@ -21,10 +21,7 @@ class RouteGenerator {
         builder: (_) => Cadastro()
          );
 
-         case "/home" :
-         return MaterialPageRoute(
-        builder: (_) => Home()
-         );
+         
 
          case "/panel-motorista" :
          return MaterialPageRoute(

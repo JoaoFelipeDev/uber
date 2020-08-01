@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:uber/model/Usuarios.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -7,8 +8,52 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController _controllerUsuario = TextEditingController();
-  TextEditingController _controllerSenha = TextEditingController();
+  TextEditingController _controllerUsuario = TextEditingController(text:"joao_passageiro@gmail.com");
+  TextEditingController _controllerSenha = TextEditingController(text:"123456789");
+  String _mensagemErro = "";
+
+  _validarCampos() {
+    //Recuperando Dados dos campos
+    String nome = _controllerUsuario.text;
+
+    String senha = _controllerSenha.text;
+
+    if (nome.isNotEmpty) {
+      print("Chegou nome");
+      _mensagemErro = "";
+
+      _mensagemErro = "";
+      if (senha.isNotEmpty && senha.length >= 6) {
+        Usuario usuario = Usuario();
+        usuario.email = nome;
+        usuario.senha = senha;
+
+        _logarUsuario(usuario);
+      } else {
+        _mensagemErro = "Preencha a senha! digite mais de 6 caracteres";
+      }
+    } else {
+      setState(() {
+        _mensagemErro = "O E-mail";
+      });
+    }
+  }
+
+  _logarUsuario(Usuario usuario) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth
+        .signInWithEmailAndPassword(
+            email: usuario.email, password: usuario.senha)
+        .then((firebaseUser) {
+      Navigator.pushReplacementNamed(context, "/painel-passageiro");
+    }).catchError((error) {
+      setState(() {
+        _mensagemErro = "Erro ao autenticar usuario, verifique e-mail e senha";
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +113,9 @@ class _LoginState extends State<Login> {
                       ),
                       color: Colors.cyan,
                       padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      onPressed: () {}),
+                      onPressed: () {
+                        _validarCampos();
+                      }),
                 ),
                 Center(
                   child: GestureDetector(
@@ -83,7 +130,7 @@ class _LoginState extends State<Login> {
                   padding: EdgeInsets.only(top: 16),
                   child: Center(
                     child: Text(
-                      "Erro",
+                      _mensagemErro,
                       style: TextStyle(color: Colors.red, fontSize: 20),
                     ),
                   ),
