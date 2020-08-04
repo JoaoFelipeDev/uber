@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uber/model/Usuarios.dart';
+import 'package:geolocator/geolocator.dart';
 
 class PainelPassageiro extends StatefulWidget {
   @override
@@ -11,6 +11,8 @@ class PainelPassageiro extends StatefulWidget {
 }
 
 class _PainelPassageiroState extends State<PainelPassageiro> {
+  CameraPosition _cameraPosition =
+      CameraPosition(target: LatLng(-22.566671, -44.944692), zoom: 16);
   String _nome = "";
   FirebaseAuth auth = FirebaseAuth.instance;
   Firestore db = Firestore.instance;
@@ -35,7 +37,6 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
 
   _resgatarNome() async {
     FirebaseUser user = await auth.currentUser();
-    
 
     DocumentSnapshot snapshot =
         await db.collection("usuarios").document(user.uid).get();
@@ -47,10 +48,42 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
     });
   }
 
+  _recuperarUltimaLocalizacaoConhecida() async {
+    Position position = await Geolocator()
+        .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      if (position != null) {
+        _cameraPosition = CameraPosition(
+            target: LatLng(position.latitude, position.longitude), zoom: 19);
+        _movimentarCamera(_cameraPosition);
+      }
+    });
+  }
+
+  _movimentarCamera(CameraPosition cameraPosition) async {
+    GoogleMapController googleMapController = await _controller.future;
+    googleMapController
+        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  }
+
+  _adicionarListenerLocalizacao() {
+    var geolocator = Geolocator();
+    var locationOptions =
+        LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
+    geolocator.getPositionStream(locationOptions).listen((Position position) {
+      _cameraPosition = CameraPosition(
+          target: LatLng(position.latitude, position.longitude), zoom: 19);
+      _movimentarCamera(_cameraPosition);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _resgatarNome();
+    _recuperarUltimaLocalizacaoConhecida();
+    _adicionarListenerLocalizacao();
   }
 
   @override
@@ -74,8 +107,7 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
       body: Container(
         child: GoogleMap(
           mapType: MapType.normal,
-          initialCameraPosition:
-              CameraPosition(target: LatLng(-22.566671, -44.944692), zoom: 16),
+          initialCameraPosition: _cameraPosition,
           onMapCreated: _onMapCreated,
         ),
       ),
