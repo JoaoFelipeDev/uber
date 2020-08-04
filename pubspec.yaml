@@ -57,6 +57,8 @@ flutter:
   assets:
    - imagens/logo.png
    - imagens/fundo.png
+   - imagens/motorista.png
+   - imagens/passageiro.png
   
   
         
