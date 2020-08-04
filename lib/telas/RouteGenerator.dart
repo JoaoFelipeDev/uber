@@ -23,7 +23,7 @@ class RouteGenerator {
 
          
 
-         case "/panel-motorista" :
+         case "/painel-motorista" :
          return MaterialPageRoute(
         builder: (_) => PainelMotorista()
          );
