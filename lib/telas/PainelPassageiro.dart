@@ -225,6 +225,14 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
     });
   }
 
+  _statusACaminho() {
+    
+    _exibirCaixaEnderecoDestino = false;
+    _alterarBotaoPrincipal("Motorista a caminho", Colors.grey, () {
+      
+    });
+  }
+
   _adicionarListenerRequisicaoAtiva() async {
     FirebaseUser firebaseUser = await UsuarioFirebase.getUsuarioAtual();
 
@@ -247,6 +255,7 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
             _statusAguardando();
             break;
           case StatusRequisicao.A_CAMINHO:
+            _statusACaminho();
             break;
           case StatusRequisicao.VIAGEM:
             break;
